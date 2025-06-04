@@ -58,7 +58,7 @@ const formSchema = z.object({
     }),
 
     banner_section_details_1_title: z
-        .number({
+        .string({
             required_error: 'O título da seção de detalhes 1 é obrigatório.',
         })
         .min(1, {
@@ -68,7 +68,7 @@ const formSchema = z.object({
         message: 'A descrição da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_section_details_2_title: z
-        .number({
+        .string({
             required_error: 'O título da seção de detalhes 2 é obrigatório.',
         })
         .min(1, {
@@ -78,7 +78,7 @@ const formSchema = z.object({
         message: 'O título da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_section_details_3_title: z
-        .number({
+        .string({
             required_error: 'O título da seção de detalhes 3 é obrigatório.',
         })
         .min(1, {
@@ -240,11 +240,12 @@ export default function Home() {
             banner_image_button_link: '',
             banner_button_text: '',
             banner_button_link: '',
-            banner_section_details_1_title: undefined,
+            banner_image_title: '',
+            banner_section_details_1_title: '',
             banner_section_details_1_description: '',
-            banner_section_details_2_title: undefined,
+            banner_section_details_2_title: '',
             banner_section_details_2_description: '',
-            banner_section_details_3_title: undefined,
+            banner_section_details_3_title: '',
             banner_section_details_3_description: '',
             banner_video_title: '',
             banner_video_image: undefined,
@@ -833,7 +834,7 @@ export default function Home() {
                                     control={form.control}
                                     name="destinations_details"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="col-span-full">
                                             <FormLabel>Detalhes dos destinos</FormLabel>
                                             <FormControl>
                                                 <div className="grid grid-cols-1 space-y-2 gap-x-2 md:grid-cols-3">
@@ -924,8 +925,8 @@ export default function Home() {
                                             <h3 className="text-lg font-medium">Detalhes dos pacotes</h3>
                                         </div>
                                         <FormControl>
-                                            <>
-                                                <div className="space-y-4">
+                                            <div>
+                                                <div className="space-y-4 w-full">
                                                     <div className="grid grid-cols-2 gap-4">
                                                         <FormField
                                                             control={form.control}
@@ -1044,26 +1045,56 @@ export default function Home() {
                                                             const newPackage = form.getValues('new_package');
                                                             const currentDetails = form.getValues('packages_details') || [];
 
-                                                            // Adiciona o novo pacote à lista
-                                                            form.setValue('packages_details', [...currentDetails, newPackage]);
-
-                                                            // Limpa os campos do novo pacote para o próximo item
-                                                            form.setValue('new_package', {
-                                                                title: '',
-                                                                image: undefined, // undefined é mais apropriado para limpar campos de arquivo
-                                                                tags: [],
-                                                                service: '',
-                                                                time: '',
-                                                                price: 0,
-                                                                link: '',
+                                                            // Validação com Zod
+                                                            const packageSchema = z.object({
+                                                                title: z.string().min(2, 'O título deve ter pelo menos 2 caracteres'),
+                                                                image: z.instanceof(File, { message: 'A imagem é obrigatória' }),
+                                                                service: z.string().min(2, 'O serviço deve ter pelo menos 2 caracteres'),
+                                                                time: z.string().min(2, 'A duração é obrigatória'),
+                                                                price: z.number().min(0, 'O preço deve ser maior que 0'),
+                                                                link: z.string().url('O link deve ser uma URL válida'),
+                                                                tags: z.array(z.string()).optional(),
                                                             });
+
+                                                            const result = packageSchema.safeParse(newPackage);
+
+                                                            if (result.success) {
+                                                                // Adiciona o novo pacote à lista com tags garantidas
+                                                                form.setValue('packages_details', [
+                                                                    ...currentDetails,
+                                                                    {
+                                                                        ...result.data,
+                                                                        tags: result.data.tags || [],
+                                                                    },
+                                                                ]);
+
+                                                                // Limpa os campos do novo pacote para o próximo item
+                                                                form.setValue('new_package', {
+                                                                    title: '',
+                                                                    image: undefined,
+                                                                    tags: [],
+                                                                    service: '',
+                                                                    time: '',
+                                                                    price: 0,
+                                                                    link: '',
+                                                                });
+                                                            } else {
+                                                                // Atualiza os erros do formulário com os erros do Zod
+                                                                result.error.errors.forEach((error) => {
+                                                                    const fieldName = `new_package.${error.path[0]}` as keyof typeof form.getValues;
+                                                                    form.setError(fieldName, {
+                                                                        type: 'manual',
+                                                                        message: error.message,
+                                                                    });
+                                                                });
+                                                            }
                                                         }}
                                                     >
                                                         Adicionar à tabela
                                                     </Button>
                                                 </div>
 
-                                                <div className="mt-4 rounded-md border">
+                                                <div className="mt-4 max-w-full overflow-x-auto">
                                                     <Table>
                                                         <TableHeader>
                                                             <TableRow>
@@ -1080,7 +1111,7 @@ export default function Home() {
                                                         <TableBody>
                                                             {field.value.map((item, index) => (
                                                                 <TableRow key={index}>
-                                                                    <TableCell>{item.title}</TableCell>
+                                                                    <TableCell className="line-clamp-1 max-w-[200px]">{item.title}</TableCell>
                                                                     <TableCell>{item.image?.name}</TableCell>
                                                                     <TableCell>{item.tags?.join(', ')}</TableCell>{' '}
                                                                     {/* Usa optional chaining para tags */}
@@ -1109,7 +1140,7 @@ export default function Home() {
                                                         </TableBody>
                                                     </Table>
                                                 </div>
-                                            </>
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

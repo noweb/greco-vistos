@@ -13,9 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('dashboard/pages/home', function () {
-        return Inertia::render('home');
-    })->name('dashboard.home');
+    Route::get('dashboard/pages/home', [HomeController::class, 'index'])->name('dashboard.pages.home.index');
+    Route::put('dashboard/pages/home', [HomeController::class, 'update'])->name('dashboard.pages.home.update');
 
     Route::get('dashboard/settings', function () {
         return Inertia::render('settings');
