@@ -1,4 +1,6 @@
 import { Button } from '@headlessui/react';
+import { Fade, JackInTheBox, Zoom } from 'react-awesome-reveal';
+import { Element } from 'react-scroll';
 
 const destinos = [
     {
@@ -29,19 +31,21 @@ const destinos = [
 
 function DestinationsGrid() {
     return (
-        <section className="px-4 py-12 w-full">
+        <section className="w-full px-4 py-12">
             <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                 {destinos.map((destino, index) => (
                     <div
                         key={index}
-                        className={`group relative overflow-hidden rounded-3xl shadow-lg ${index === 0 || index === 2 ? 'md:h-[90%] md:self-end' : ''} ${index === 3 || index === 5 ? 'md:h-[90%] md:self-start' : ''}`}
+                        className={`group relative overflow-hidden rounded-3xl ${index === 0 || index === 2 ? 'md:h-[90%] md:self-end' : ''} ${index === 3 || index === 5 ? 'md:h-[90%] md:self-start' : ''}`}
                     >
-                        <img
-                            src={destino.imagem}
-                            alt={destino.nome}
-                            className="h-60 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="whitespace-nowrap absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1.5 font-medium text-white shadow-md backdrop-blur-md transition cursor-auto">
+                        <Fade triggerOnce duration={1500} delay={150 * index}>
+                            <img
+                                src={destino.imagem}
+                                alt={destino.nome}
+                                className="h-60 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
+                        </Fade>
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 cursor-auto rounded-full bg-white/10 px-3 py-1.5 font-medium whitespace-nowrap text-white shadow-md backdrop-blur-md transition">
                             {destino.nome}
                         </div>
                     </div>
@@ -53,33 +57,43 @@ function DestinationsGrid() {
 
 export default function Destinations() {
     return (
-        <div className="relative flex w-full flex-col items-center justify-center px-3 py-6 md:p-12">
-            <div
-                className="absolute flex h-[400px] w-full"
-                style={{
-                    backgroundImage: 'url(/images/bg_layer.png)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            ></div>
+        <Element name="servicos">
+            <div className="relative flex w-full flex-col items-center justify-center px-3 py-6 md:p-12">
+                <div
+                    className="absolute flex h-[400px] w-full"
+                    style={{
+                        backgroundImage: 'url(/images/bg_layer.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
+                ></div>
 
-            <div className="mx-auto inline-flex flex-col items-center justify-center">
-                <Button className="bg-app-primary flex gap-3 rounded-full px-6 py-2">
-                    <span className="text-app-secondary text-[16px] font-semibold">Top Destinos</span>
-                </Button>
+                <div className="mx-auto inline-flex flex-col items-center justify-center">
+                    <JackInTheBox triggerOnce duration={1000}>
+                        <Button className="bg-app-primary flex gap-3 rounded-full px-6 py-2">
+                            <span className="text-app-secondary text-[16px] font-semibold">Top Destinos</span>
+                        </Button>
+                    </JackInTheBox>
 
-                <h2 className="text-typography-primary mt-6 max-w-3xl text-center text-[56px] font-semibold">Destinos mais procurados</h2>
-                <p className="text-typography-secondary mt-2 max-w-3xl text-center text-[16px]">
-                    Confira os destinos mais procurados por nossos clientes nos últimos meses, qual seria o seu novo destino?
-                </p>
+                    <Fade triggerOnce duration={1500} delay={200}>
+                        <h2 className="text-typography-primary mt-6 max-w-3xl text-center text-[56px] font-semibold">Destinos mais procurados</h2>
+                    </Fade>
+                    <Fade triggerOnce duration={1500} delay={400}>
+                        <p className="text-typography-secondary mt-2 max-w-3xl text-center text-[16px]">
+                            Confira os destinos mais procurados por nossos clientes nos últimos meses, qual seria o seu novo destino?
+                        </p>
+                    </Fade>
 
-                <Button className="bg-app-secondary hover:bg-app-secondary/80 mt-10 flex cursor-pointer gap-3 rounded-full px-6 py-2 transition-all duration-300">
-                    <span className="text-[16px] font-semibold text-white">Conheça mais</span>
-                </Button>
+                    <Zoom triggerOnce duration={1000} delay={600}>
+                        <Button className="bg-app-secondary hover:bg-app-secondary/80 mt-10 flex cursor-pointer gap-3 rounded-full px-6 py-2 transition-all duration-300">
+                            <span className="text-[16px] font-semibold text-white">Conheça mais</span>
+                        </Button>
+                    </Zoom>
+                </div>
+
+                <DestinationsGrid />
             </div>
-
-            <DestinationsGrid />
-        </div>
+        </Element>
     );
 }

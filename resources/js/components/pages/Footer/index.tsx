@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { ArrowUpRightIcon } from 'lucide-react';
+import { Link } from 'react-scroll';
 
 export default function Footer() {
     const socialLinks = [
@@ -31,39 +31,44 @@ export default function Footer() {
 
     return (
         <footer className="bg-app-secondary">
-            <div className="space-y-10 py-12 max-w-7xl  px-6 2xl:px-0 mx-auto px-6 2xl:px-0">
+            <div className="mx-auto max-w-7xl space-y-10 px-6 py-12 2xl:px-0">
                 <div className="flex flex-col gap-16 xl:flex-row xl:items-center xl:justify-between">
                     <div className="space-y-10 xl:w-[456px]">
                         <div className="space-y-3">
-                            <h1 className="text-white text-4xl leading-[130.8%] font-medium tracking-[-0.07em] md:text-5xl xl:text-[56px]">
+                            <h1 className="text-4xl leading-[130.8%] font-medium tracking-[-0.07em] text-white md:text-5xl xl:text-[56px]">
                                 Está com alguma dúvida?
                             </h1>
 
-                            <p className="text-white tracking-[-0.02em] text-pretty">
+                            <p className="tracking-[-0.02em] text-pretty text-white">
                                 Entre em contato através do nosso canal direto ao cliente através do botão abaixo
                             </p>
                         </div>
-
-                        <Button className="h-[54px]">Central de Atendimento</Button>
+                        <div className="logo flex">
+                            <Link to="banner" smooth={true} duration={500} className="cursor-pointer">
+                                <div className="logo">
+                                    <img src="/logo-2.svg" alt="logo" />
+                                </div>
+                            </Link>
+                        </div>
                     </div>
 
-                    <a href="#" className="flex items-center justify-between border-b !border-white group pb-3 xl:w-[500px]">
-                        <h2 className="text-4xl tracking-[-0.06em] xl:text-[40px] text-white">Receba novidades</h2>
+                    <a href="#" className="group flex items-center justify-between border-b !border-white pb-3 xl:w-[500px]">
+                        <h2 className="text-4xl tracking-[-0.06em] text-white xl:text-[40px]">Receba novidades</h2>
 
-                        <ArrowUpRightIcon className="h-12 w-12 text-white stroke-[1px] group-hover:rotate-45 transition-all duration-300" />
+                        <ArrowUpRightIcon className="h-12 w-12 stroke-[1px] text-white transition-all duration-300 group-hover:rotate-45" />
                     </a>
                 </div>
 
                 <div className="flex flex-col gap-16 xl:flex-row xl:items-end xl:justify-between">
                     <div className="space-y-5">
-                        <p className="text-white font-semibold tracking-[-0.02em]">Siga em nossas redes:</p>
+                        <p className="font-semibold tracking-[-0.02em] text-white">Siga em nossas redes:</p>
 
                         <div className="flex flex-wrap gap-3 sm:gap-5">
                             {socialLinks.map((link, index) => (
                                 <a
                                     key={index}
                                     href={link.href}
-                                    className="!border-white text-white flex h-10 items-center justify-center rounded-full border px-5 py-2.5"
+                                    className="flex h-10 items-center justify-center rounded-full border !border-white px-5 py-2.5 text-white transition-all duration-300 hover:text-app-primary hover:!border-app-primary"
                                 >
                                     {link.label}
                                 </a>
@@ -73,33 +78,33 @@ export default function Footer() {
 
                     <div className="font-plusJakartaSans flex justify-between gap-6 xl:w-[612px]">
                         <div className="space-y-5">
-                            <p className="tracking-[-0.02em] text-white/50 font-bold">Empresa</p>
+                            <p className="font-bold tracking-[-0.02em] text-white/50">Empresa</p>
 
                             <div className="flex flex-col space-y-3">
                                 {companyLinks.map((company, index) => (
-                                    <a className="text-white tracking-[-0.02em]" key={index} href={company.href}>
+                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
                                         {company.label}
                                     </a>
                                 ))}
                             </div>
                         </div>
                         <div className="space-y-5">
-                            <p className="tracking-[-0.02em] text-white/50 font-bold">Novidades</p>
+                            <p className="font-bold tracking-[-0.02em] text-white/50">Novidades</p>
 
                             <div className="flex flex-col space-y-3">
                                 {newsLinks.map((company, index) => (
-                                    <a className="text-white tracking-[-0.02em]" key={index} href={company.href}>
+                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
                                         {company.label}
                                     </a>
                                 ))}
                             </div>
                         </div>
                         <div className="space-y-5">
-                            <p className="tracking-[-0.02em] text-white/50 font-bold">Suporte</p>
+                            <p className="font-bold tracking-[-0.02em] text-white/50">Suporte</p>
 
                             <div className="flex flex-col space-y-3">
                                 {supportLinks.map((company, index) => (
-                                    <a className="text-white tracking-[-0.02em]" key={index} href={company.href}>
+                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
                                         {company.label}
                                     </a>
                                 ))}

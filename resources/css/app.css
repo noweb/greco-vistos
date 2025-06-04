@@ -58,13 +58,13 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
-    --color-app-primary: #FBBB3F;
+    --color-app-primary: #fbbb3f;
     --color-app-secondary: #081621;
-    --color-app-tertiary: #F7F7F7;
+    --color-app-tertiary: #f7f7f7;
 
     --color-typography-primary: #232323;
-    --color-typography-secondary: #8D8D8D;
-    --color-typography-tertiary: #CCCCCC;
+    --color-typography-secondary: #8d8d8d;
+    --color-typography-tertiary: #cccccc;
 }
 
 /*
@@ -163,5 +163,29 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+.embla {
+    overflow: hidden;
+}
+.embla__container {
+    display: flex;
+}
+
+.embla__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
+@media (min-width: 640px) {
+    .embla__slide {
+        flex: 0 0 50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .embla__slide {
+        flex: 0 0 32.5%;
     }
 }
