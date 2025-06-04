@@ -9,30 +9,17 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+import { Auth, type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { BookOpen, LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dashboard2',
         href: '/dashboard',
         icon: LayoutGrid,
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
     },
 ];
 
@@ -44,12 +31,21 @@ interface AppHeaderProps {
 
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
-    const { auth } = page.props;
+    const { auth, app_url }: { auth: Auth; app_url: string } = page.props;
     const getInitials = useInitials();
+
+    const rightNavItems: NavItem[] = [
+        {
+            title: 'Site',
+            href: app_url,
+            icon: BookOpen,
+        },
+    ];
+
     return (
         <>
             <div className="border-sidebar-border/80 border-b">
-                <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl  px-6 2xl:px-0">
+                <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl 2xl:px-0">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
@@ -172,7 +168,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </div>
             {breadcrumbs.length > 1 && (
                 <div className="border-sidebar-border/70 flex w-full border-b">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl  px-6 2xl:px-0">
+                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 px-6 text-neutral-500 md:max-w-7xl 2xl:px-0">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </div>
                 </div>
