@@ -23,9 +23,9 @@ function EtapasSection() {
     const [expandedIndex, setExpandedIndex] = useState<number>(0);
 
     return (
-        <div className="bg-white px-4 py-12">
+        <div className="px-4 h-full flex items-center justify-center">
             <div className="mx-auto max-w-3xl">
-                <div className="mt-6 divide-y divide-gray-200">
+                <div className="divide-y divide-gray-200">
                     <Fade triggerOnce duration={500} delay={500} cascade>
                         {steps.map((step, index) => (
                             <div key={index} className="py-6">
@@ -88,7 +88,7 @@ export default function WhoWorks() {
                             <img src="/images/who-works-image.png" alt="who works" className="h-full w-full object-cover" />
                         </Slide>
                     </div>
-                    <div className="col-span-8 md:col-span-3 md:pl-6">
+                    <div className="col-span-8 md:col-span-3 md:pl-6 pt-0 mt-0">
                         <EtapasSection />
                     </div>
                 </div>

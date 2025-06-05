@@ -9,11 +9,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-
-    Route::get('dashboard/pages/home', [HomeController::class, 'index'])->name('dashboard.pages.home.index');
+    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard.pages.home.index');
     Route::put('dashboard/pages/home', [HomeController::class, 'update'])->name('dashboard.pages.home.update');
 
     Route::get('dashboard/settings', function () {

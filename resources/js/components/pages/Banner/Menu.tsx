@@ -9,7 +9,7 @@ type MenuItemsProps = {
 
 function MenuItems({ handleClose }: MenuItemsProps) {
     return (
-        <ul className="flex w-full flex-col items-center gap-5 pt-8 lg:mr-4 lg:flex-row lg:gap-2 lg:pr-6 2xl:gap-8 2xl:pr-0">
+        <ul className="flex w-full flex-col items-center gap-5 lg:mr-4 lg:flex-row lg:gap-2 lg:pr-6 2xl:gap-8 2xl:pr-0">
             <Link to="banner" smooth={true} duration={500} onClick={handleClose} className="w-full">
                 <li className="text-typography-primary w-full cursor-pointer py-2 text-center text-sm font-black md:w-auto lg:py-1">
                     <span className="p-2 whitespace-nowrap">Home</span>
@@ -42,7 +42,7 @@ export default function Menu() {
     }
 
     return (
-        <div className="flex items-center justify-between gap-8">
+        <div className="flex items-center justify-between gap-8 pr-10">
             <Link to="banner" smooth={true} duration={500} onClick={handleClose}>
                 <div className="logo cursor-pointer">
                     <img src="/logo.svg" alt="logo" />

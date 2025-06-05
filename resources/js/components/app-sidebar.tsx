@@ -4,19 +4,14 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid, PanelTopIcon, SettingsIcon, SquarePen } from 'lucide-react';
+import { PanelTopIcon, SettingsIcon, SquarePen } from 'lucide-react';
 import { useEffect } from 'react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
         title: 'Editar Conteúdo',
-        href: '/dashboard/pages/home',
+        href: '/dashboard',
         icon: SquarePen,
     },
     {

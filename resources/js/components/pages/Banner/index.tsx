@@ -2,8 +2,10 @@ import { CountUp } from '@/components/count-up';
 import { Button } from '@headlessui/react';
 import { ArrowRightIcon } from 'lucide-react';
 import { Fade, JackInTheBox, Slide } from 'react-awesome-reveal';
-import Menu from './Menu';
 import { Element } from 'react-scroll';
+import Menu from './Menu';
+
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 function StatsSection() {
     const stats = [
@@ -61,24 +63,41 @@ export default function Banner() {
                             </Fade>
                         </div>
                         <Fade triggerOnce duration={600} delay={200}>
-                            <a href="#" className="flex flex-col items-start justify-start pr-8">
-                                <img
-                                    src="/images/banner_video.png"
-                                    alt="banner image video"
-                                    className="aspect-video w-[180px] overflow-hidden rounded-2xl object-cover"
-                                />
-                                <div className="flex w-full flex-row">
-                                    <div className="flex flex-1 flex-col items-start justify-center">
-                                        <h3 className="text-typography-primary mt-3 text-[14px] font-semibold">Conheça a Bruna</h3>
-                                        <button className="text-typography-tertiary mt-1 cursor-pointer text-[14px]">Ver vídeo</button>
+                            <Dialog>
+                                <DialogTrigger>
+                                    <button className="mr-3.5 flex cursor-pointer flex-col items-start justify-start pr-8">
+                                        <img
+                                            src="/images/banner_video.png"
+                                            alt="banner image video"
+                                            className="aspect-video w-[180px] overflow-hidden rounded-2xl object-cover"
+                                        />
+                                        <div className="flex w-full flex-row">
+                                            <div className="flex flex-1 flex-col items-start justify-center">
+                                                <h3 className="text-typography-primary mt-3 text-[14px] font-semibold">Conheça a Bruna</h3>
+                                                <button className="text-typography-tertiary mt-1 cursor-pointer text-[14px]">Ver vídeo</button>
+                                            </div>
+                                            <div className="flex items-center justify-center">
+                                                <button className="bg-app-secondary aspect-square rounded-full p-1 text-white">
+                                                    <ArrowRightIcon className="h-6 w-6 text-white" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent className="!max-w-5xl overflow-hidden p-0">
+                                    <div className="relative aspect-video w-full">
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 px-6 rounded-b-3xl py-2 bg-app-primary">
+                                            <h3 className="text-typography-primary text-[16px] font-semibold">Conheça a Bruna</h3>
+                                        </div>
+                                        <iframe
+                                            className="h-full w-full"
+                                            src="https://www.youtube.com/embed/pygGug3TCaI?si=PPVDe5T9eEwhW0rb&autoplay=1"
+                                            title="YouTube video player"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        ></iframe>
                                     </div>
-                                    <div className="flex items-center justify-center">
-                                        <button className="bg-app-secondary aspect-square rounded-full p-1 text-white">
-                                            <ArrowRightIcon className="h-6 w-6 text-white" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </a>
+                                </DialogContent>
+                            </Dialog>
                         </Fade>
                     </div>
 
