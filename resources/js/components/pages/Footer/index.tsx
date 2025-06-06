@@ -1,33 +1,51 @@
+import { Home } from '@/pages/home';
 import { ArrowUpRightIcon } from 'lucide-react';
 import { Link } from 'react-scroll';
 
-export default function Footer() {
+type FooterProps = {
+    home: Pick<
+        Home,
+        | 'footer_title'
+        | 'footer_description'
+        | 'footer_button_text'
+        | 'footer_button_link'
+        | 'footer_details'
+        | 'footer_instagram_link'
+        | 'footer_x_link'
+        | 'footer_facebook_link'
+        | 'footer_youtube_link'
+        | 'footer_whatsapp_link'
+        | 'footer_link'
+    >;
+};
+
+export default function Footer({ home }: FooterProps) {
     const socialLinks = [
-        { label: 'Instagram', href: '#' },
-        { label: 'X', href: '#' },
-        { label: 'Facebook', href: '#' },
-        { label: 'YouTube', href: '#' },
+        { label: 'Instagram', href: home.footer_instagram_link ?? '' },
+        { label: 'X', href: home.footer_x_link ?? '' },
+        { label: 'Facebook', href: home.footer_facebook_link ?? '' },
+        { label: 'YouTube', href: home.footer_youtube_link ?? '' },
     ];
 
     const companyLinks = [
-        { label: 'Home', href: '#' },
-        { label: 'Quem somos', href: '#' },
-        { label: 'Serviços', href: '#' },
-        { label: 'Contato', href: '#' },
+        { label: 'Home', to: 'banner' },
+        { label: 'Quem somos', to: 'quem-somos' },
+        { label: 'Serviços', to: 'servicos' },
+        { label: 'Contato', to: 'banner' },
     ];
 
-    const newsLinks = [
-        { label: 'Passaporte', href: '#' },
-        { label: 'Visto', href: '#' },
-        { label: 'Entrevista', href: '#' },
-        { label: 'Polícia Federal', href: '#' },
-    ];
+    // const newsLinks = [
+    //     { label: 'Passaporte', href: '#' },
+    //     { label: 'Visto', href: '#' },
+    //     { label: 'Entrevista', href: '#' },
+    //     { label: 'Polícia Federal', href: '#' },
+    // ];
 
-    const supportLinks = [
-        { label: 'FAQ', href: '#' },
-        { label: 'Contato', href: '#' },
-        { label: 'Dúvidas Frequentes', href: '#' },
-    ];
+    // const supportLinks = [
+    //     { label: 'FAQ', href: '#' },
+    //     { label: 'Contato', href: '#' },
+    //     { label: 'Dúvidas Frequentes', href: '#' },
+    // ];
 
     return (
         <footer className="bg-app-secondary">
@@ -36,12 +54,10 @@ export default function Footer() {
                     <div className="space-y-10 xl:w-[456px]">
                         <div className="space-y-3">
                             <h1 className="text-4xl leading-[130.8%] font-medium tracking-[-0.07em] text-white md:text-5xl xl:text-[56px]">
-                                Está com alguma dúvida?
+                                {home.footer_title ?? ''}
                             </h1>
 
-                            <p className="tracking-[-0.02em] text-pretty text-white">
-                                Entre em contato através do nosso canal direto ao cliente através do botão abaixo
-                            </p>
+                            <p className="tracking-[-0.02em] text-pretty text-white">{home.footer_description ?? ''}</p>
                         </div>
                         <div className="logo flex">
                             <Link to="banner" smooth={true} duration={500} className="cursor-pointer">
@@ -52,8 +68,12 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    <a href="#" className="group flex items-center justify-between border-b !border-white pb-3 xl:w-[500px]">
-                        <h2 className="text-4xl tracking-[-0.06em] text-white xl:text-[40px]">Receba novidades</h2>
+                    <a
+                        href={home.footer_button_link ?? ''}
+                        target="_blank"
+                        className="group flex items-center justify-between border-b !border-white pb-3 xl:w-[500px]"
+                    >
+                        <h2 className="text-4xl tracking-[-0.06em] text-white xl:text-[40px]">{home.footer_button_text ?? ''}</h2>
 
                         <ArrowUpRightIcon className="h-12 w-12 stroke-[1px] text-white transition-all duration-300 group-hover:rotate-45" />
                     </a>
@@ -68,7 +88,8 @@ export default function Footer() {
                                 <a
                                     key={index}
                                     href={link.href}
-                                    className="flex h-10 items-center justify-center rounded-full border !border-white px-5 py-2.5 text-white transition-all duration-300 hover:text-app-primary hover:!border-app-primary"
+                                    target="_blank"
+                                    className="hover:text-app-primary hover:!border-app-primary flex h-10 items-center justify-center rounded-full border !border-white px-5 py-2.5 text-white transition-all duration-300"
                                 >
                                     {link.label}
                                 </a>
@@ -76,24 +97,34 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    <div className="font-plusJakartaSans flex justify-between gap-6 xl:w-[612px]">
+                    <div className="font-plusJakartaSans flex justify-end gap-6 xl:w-[612px]">
                         <div className="space-y-5">
                             <p className="font-bold tracking-[-0.02em] text-white/50">Empresa</p>
 
                             <div className="flex flex-col space-y-3">
                                 {companyLinks.map((company, index) => (
-                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
+                                    <Link
+                                        key={index}
+                                        to={company.to}
+                                        smooth={true}
+                                        duration={500}
+                                        className="hover:text-app-primary cursor-pointer tracking-[-0.02em] text-white transition-all duration-300"
+                                    >
                                         {company.label}
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
-                        <div className="space-y-5">
+                        {/* <div className="space-y-5">
                             <p className="font-bold tracking-[-0.02em] text-white/50">Novidades</p>
 
                             <div className="flex flex-col space-y-3">
                                 {newsLinks.map((company, index) => (
-                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
+                                    <a
+                                        className="hover:text-app-primary tracking-[-0.02em] text-white transition-all duration-300"
+                                        key={index}
+                                        href={company.href}
+                                    >
                                         {company.label}
                                     </a>
                                 ))}
@@ -104,12 +135,16 @@ export default function Footer() {
 
                             <div className="flex flex-col space-y-3">
                                 {supportLinks.map((company, index) => (
-                                    <a className="tracking-[-0.02em] text-white transition-all duration-300 hover:text-app-primary" key={index} href={company.href}>
+                                    <a
+                                        className="hover:text-app-primary tracking-[-0.02em] text-white transition-all duration-300"
+                                        key={index}
+                                        href={company.href}
+                                    >
                                         {company.label}
                                     </a>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

@@ -53,6 +53,12 @@ class Home extends Model
         'footer_button_text',
         'footer_button_link',
         'footer_details',
+        'footer_instagram_link',
+        'footer_x_link',
+        'footer_facebook_link',
+        'footer_youtube_link',
+        'footer_whatsapp_link',
+        'footer_link',
     ];
 
     protected $casts = [

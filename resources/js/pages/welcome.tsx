@@ -20,9 +20,7 @@ export default function Welcome() {
             <WhoWorks home={home} />
             <Destinations home={home} />
             <Packages home={home} />
-            <Footer
-            //  home={home}
-            />
+            <Footer home={home} />
         </>
     );
 }

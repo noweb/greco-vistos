@@ -61,6 +61,16 @@ export interface Home {
     footer_description: string | null;
     footer_button_text: string | null;
     footer_button_link: string | null;
+    footer_details: Array<{
+        title: string;
+        description: string;
+    }>;
+    footer_instagram_link: string | null;
+    footer_x_link: string | null;
+    footer_facebook_link: string | null;
+    footer_youtube_link: string | null;
+    footer_whatsapp_link: string | null;
+    footer_link: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -267,6 +277,24 @@ const formSchema = z.object({
             }),
         }),
     ),
+    footer_instagram_link: z.string().min(0, {
+        message: 'O link do Instagram deve ter pelo menos 2 caracteres.',
+    }),
+    footer_x_link: z.string().min(0, {
+        message: 'O link do X deve ter pelo menos 2 caracteres.',
+    }),
+    footer_facebook_link: z.string().min(0, {
+        message: 'O link do Facebook deve ter pelo menos 2 caracteres.',
+    }),
+    footer_youtube_link: z.string().min(0, {
+        message: 'O link do YouTube deve ter pelo menos 2 caracteres.',
+    }),
+    footer_whatsapp_link: z.string().min(0, {
+        message: 'O link do WhatsApp deve ter pelo menos 2 caracteres.',
+    }),
+    footer_link: z.string().min(0, {
+        message: 'O link do rodapé deve ter pelo menos 2 caracteres.',
+    }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -342,6 +370,18 @@ export default function Home() {
             footer_description: home.footer_description ?? '',
             footer_button_text: home.footer_button_text ?? '',
             footer_button_link: home.footer_button_link ?? '',
+            footer_details: JSON.parse(home.footer_details as unknown as string) ?? [
+                {
+                    title: '',
+                    link: '',
+                },
+            ],
+            footer_instagram_link: home.footer_instagram_link ?? '',
+            footer_x_link: home.footer_x_link ?? '',
+            footer_facebook_link: home.footer_facebook_link ?? '',
+            footer_youtube_link: home.footer_youtube_link ?? '',
+            footer_whatsapp_link: home.footer_whatsapp_link ?? '',
+            footer_link: home.footer_link ?? '',
         },
     });
 
@@ -415,6 +455,17 @@ export default function Home() {
 
             formData.append('packages_section_intro_highlight', values.packages_section_intro_highlight);
             formData.append('packages_title', values.packages_title);
+            formData.append('footer_title', values.footer_title);
+            formData.append('footer_description', values.footer_description);
+            formData.append('footer_button_text', values.footer_button_text);
+            formData.append('footer_button_link', values.footer_button_link);
+            formData.append('footer_details', JSON.stringify(values.footer_details));
+            formData.append('footer_instagram_link', values.footer_instagram_link);
+            formData.append('footer_x_link', values.footer_x_link);
+            formData.append('footer_facebook_link', values.footer_facebook_link);
+            formData.append('footer_youtube_link', values.footer_youtube_link);
+            formData.append('footer_whatsapp_link', values.footer_whatsapp_link);
+            formData.append('footer_link', values.footer_link);
 
             router.post(route('dashboard.pages.home.update'), formData, {
                 forceFormData: true,
@@ -1117,6 +1168,149 @@ export default function Home() {
                                     </FormItem>
                                 )}
                             />
+                        </ContentBlock>
+
+                        <hr className="my-8" />
+
+                        <ContentBlock
+                            section_title="Rodapé"
+                            section_description="Esta seção é responsável pela edição do conteúdo da seção Rodapé da página inicial, incluindo título, descrição e detalhes."
+                            section_image={'/dashboard/footer.png'}
+                        >
+                            <FormField
+                                control={form.control}
+                                name="footer_title"
+                                render={({ field }) => (
+                                    <FormItem className="col-span-full">
+                                        <FormLabel>Título</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Título do rodapé" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="footer_description"
+                                render={({ field }) => (
+                                    <FormItem className="col-span-full">
+                                        <FormLabel>Descrição</FormLabel>
+                                        <FormControl>
+                                            <Textarea placeholder="Descrição do rodapé" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="col-span-full flex flex-row gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="footer_button_text"
+                                    render={({ field }) => (
+                                        <FormItem className="col-span-full w-full">
+                                            <FormLabel>Texto do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Texto do botão" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="footer_button_link"
+                                    render={({ field }) => (
+                                        <FormItem className="col-span-full w-full">
+                                            <FormLabel>Link do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do botão" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name="footer_link"
+                                render={({ field }) => (
+                                    <FormItem className="col-span-full">
+                                        <FormLabel>Link do rodapé</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Link do rodapé" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="col-span-full grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="footer_instagram_link"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Link do Instagram</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do Instagram" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="footer_x_link"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Link do X (Twitter)</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do X" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="footer_facebook_link"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Link do Facebook</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do Facebook" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="footer_youtube_link"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Link do YouTube</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do YouTube" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="footer_whatsapp_link"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Link do WhatsApp</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Link do WhatsApp" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </ContentBlock>
 
                         <hr className="mt-8" />
