@@ -71,9 +71,10 @@ export default function Banner({ home }: BannerProps) {
                         <div className="flex flex-1 flex-col">
                             <Fade triggerOnce duration={1000} delay={300} cascade>
                                 <h2 className="text-typography-secondary text-[16px]">{home.banner_description ?? ''}</h2>
-                                <div className="mt-10">
+                                <div className="mt-10 flex">
                                     <a
                                         href={home.banner_button_link ?? ''}
+                                        target="_blank"
                                         className="bg-app-secondary hover:bg-app-primary group flex gap-3 rounded-full px-6 py-3 text-white transition-all duration-300"
                                     >
                                         <span className="text-[16px] text-white">{home.banner_button_text ?? ''}</span>
