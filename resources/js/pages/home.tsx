@@ -53,6 +53,7 @@ export interface Home {
     destinations_details: Array<{
         title: string;
         image: File;
+        description?: string;
     }>;
     packages_section_intro_highlight: string | null;
     packages_title: string | null;
@@ -211,6 +212,9 @@ const formSchema = z.object({
             z.object({
                 title: z.string().min(0, {
                     message: 'O título da seção de destinos deve ter pelo menos 2 caracteres.',
+                }),
+                description: z.string().min(0, {
+                    message: 'A descrição da seção de destinos deve ter pelo menos 2 caracteres.',
                 }),
                 image: z.instanceof(File, {
                     message: 'A imagem da seção de destinos deve ser um arquivo.',
@@ -402,6 +406,10 @@ export default function Home() {
 
                 if (detail.image instanceof File) {
                     formData.append(`destinations_details[${index}][image]`, detail.image);
+                }
+
+                if (detail.description) {
+                    formData.append(`destinations_details[${index}][description]`, detail.description);
                 }
             });
 
@@ -1030,6 +1038,19 @@ export default function Home() {
                                                                         <FormLabel>Título</FormLabel>
                                                                         <FormControl>
                                                                             <Input placeholder="Título do destino" {...field} />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`destinations_details.${index}.description`}
+                                                                render={({ field }) => (
+                                                                    <FormItem className="col-span-full">
+                                                                        <FormLabel>Descrição</FormLabel>
+                                                                        <FormControl>
+                                                                            <Textarea placeholder="Descrição do destino" {...field} />
                                                                         </FormControl>
                                                                         <FormMessage />
                                                                     </FormItem>
