@@ -72,13 +72,13 @@ export default function Banner({ home }: BannerProps) {
                             <Fade triggerOnce duration={1000} delay={300} cascade>
                                 <h2 className="text-typography-secondary text-[16px]">{home.banner_description ?? ''}</h2>
                                 <div className="mt-10">
-                                    <Button
+                                    <a
+                                        href={home.banner_button_link ?? ''}
                                         className="bg-app-secondary hover:bg-app-primary group flex gap-3 rounded-full px-6 py-3 text-white transition-all duration-300"
-                                        onClick={() => router.visit(home.banner_button_link ?? '')}
                                     >
                                         <span className="text-[16px] text-white">{home.banner_button_text ?? ''}</span>
                                         <ArrowRightIcon className="h-6 w-6 text-white transition-all duration-300 group-hover:translate-x-1.5" />
-                                    </Button>
+                                    </a>
                                 </div>
                             </Fade>
                         </div>
