@@ -5,22 +5,74 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Head } from '@inertiajs/react';
-import { useForm } from 'react-hook-form';
+import { Head, router, usePage } from '@inertiajs/react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Trash2Icon } from 'lucide-react';
+export interface Home {
+    id: number;
+    slug: string | null;
+    page_title: string;
+    page_description: string;
+    banner_title: string;
+    banner_description: string;
+    banner_image: File;
+    banner_image_button_text: string | null;
+    banner_image_button_link: string | null;
+    banner_button_text: string | null;
+    banner_button_link: string | null;
+    banner_image_title: string;
+    banner_image_description: string;
+    banner_section_details_1_title: string | null;
+    banner_section_details_1_description: string | null;
+    banner_section_details_2_title: string | null;
+    banner_section_details_2_description: string | null;
+    banner_section_details_3_title: string | null;
+    banner_section_details_3_description: string | null;
+    banner_video_title: string;
+    banner_video_image: File;
+    banner_video_url: string | null;
+    cta_text_1: string | null;
+    cta_text_2: string | null;
+    who_works_section_intro_highlight: string | null;
+    who_works_intro_title: string | null;
+    who_works_intro_description: string | null;
+    who_works_title: string | null;
+    who_works_description: string | null;
+    who_works_image: string;
+    who_works_details: Array<{
+        title: string;
+        description: string;
+    }>;
+    destinations_section_intro_highlight: string | null;
+    destinations_title: string | null;
+    destinations_description: string | null;
+    destinations_button_text: string | null;
+    destinations_button_link: string | null;
+    destinations_details: Array<{
+        title: string;
+        image: File;
+    }>;
+    packages_section_intro_highlight: string | null;
+    packages_title: string | null;
+    footer_title: string | null;
+    footer_description: string | null;
+    footer_button_text: string | null;
+    footer_button_link: string | null;
+    created_at: string;
+    updated_at: string;
+}
 
 const formSchema = z.object({
     //  SEO
     slug: z.string().nullable(),
-    page_title: z.string().min(2, {
+    page_title: z.string().min(0, {
         message: 'O título da página deve ter pelo menos 2 caracteres.',
     }),
     page_description: z
         .string()
-        .min(2, {
+        .min(0, {
             message: 'A descrição da página deve ter pelo menos 2 caracteres.',
         })
         .max(160, {
@@ -28,34 +80,32 @@ const formSchema = z.object({
         }),
 
     //  Conteúdo Banner
-    banner_title: z.string().min(2, {
+    banner_title: z.string().min(0, {
         message: 'O título do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_description: z.string().min(2, {
+    banner_description: z.string().min(0, {
         message: 'A descrição do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_image: z.instanceof(File, {
         message: 'A imagem do banner deve ser um arquivo.',
     }),
-    banner_image_button_text: z.string().min(2, {
+    banner_image_button_text: z.string().min(0, {
         message: 'O texto do botão da imagem do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_image_button_link: z.string().min(2, {
+    banner_image_button_link: z.string().min(0, {
         message: 'O link do botão da imagem do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_button_text: z.string().min(2, {
+    banner_button_text: z.string().min(0, {
         message: 'O texto do botão do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_button_link: z.string().min(2, {
+    banner_button_link: z.string().min(0, {
         message: 'O link do botão do banner deve ter pelo menos 2 caracteres.',
     }),
 
-    banner_image_title: z.string().min(2, {
+    banner_image_title: z.string().min(0, {
         message: 'O título da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_image_description: z.string().min(2, {
-        message: 'A descrição da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
-    }),
+    banner_image_description: z.string(),
 
     banner_section_details_1_title: z
         .string({
@@ -64,7 +114,7 @@ const formSchema = z.object({
         .min(1, {
             message: 'O título da seção de detalhes 1 deve ser um número maior que 0.',
         }),
-    banner_section_details_1_description: z.string().min(2, {
+    banner_section_details_1_description: z.string().min(0, {
         message: 'A descrição da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_section_details_2_title: z
@@ -74,7 +124,7 @@ const formSchema = z.object({
         .min(1, {
             message: 'O título da seção de detalhes 2 deve ser um número maior que 0.',
         }),
-    banner_section_details_2_description: z.string().min(2, {
+    banner_section_details_2_description: z.string().min(0, {
         message: 'O título da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_section_details_3_title: z
@@ -84,41 +134,41 @@ const formSchema = z.object({
         .min(1, {
             message: 'O título da seção de detalhes 3 deve ser um número maior que 0.',
         }),
-    banner_section_details_3_description: z.string().min(2, {
+    banner_section_details_3_description: z.string().min(0, {
         message: 'A descrição da seção de detalhes do banner deve ter pelo menos 2 caracteres.',
     }),
-    banner_video_title: z.string().min(2, {
+    banner_video_title: z.string().min(0, {
         message: 'O título do vídeo do banner deve ter pelo menos 2 caracteres.',
     }),
     banner_video_image: z.instanceof(File, {
         message: 'A imagem do vídeo do banner deve ser um arquivo.',
     }),
-    banner_video_url: z.string().min(2, {
+    banner_video_url: z.string().min(0, {
         message: 'A URL do vídeo do banner deve ter pelo menos 2 caracteres.',
     }),
 
     // CTA
-    cta_text_1: z.string().min(2, {
+    cta_text_1: z.string().min(0, {
         message: 'O texto 1 do CTA deve ter pelo menos 2 caracteres.',
     }),
-    cta_text_2: z.string().min(2, {
+    cta_text_2: z.string().min(0, {
         message: 'O texto 2 do CTA deve ter pelo menos 2 caracteres.',
     }),
 
     // WhoWorks
-    who_works_section_intro_highlight: z.string().min(2, {
+    who_works_section_intro_highlight: z.string().min(0, {
         message: 'O destaque da seção de como funciona deve ter pelo menos 2 caracteres.',
     }),
-    who_works_intro_title: z.string().min(2, {
+    who_works_intro_title: z.string().min(0, {
         message: 'O título da seção de como funciona deve ter pelo menos 2 caracteres.',
     }),
-    who_works_intro_description: z.string().min(2, {
+    who_works_intro_description: z.string().min(0, {
         message: 'A descrição da seção de como funciona deve ter pelo menos 2 caracteres.',
     }),
-    who_works_title: z.string().min(2, {
+    who_works_title: z.string().min(0, {
         message: 'O título da seção de como funciona deve ter pelo menos 2 caracteres.',
     }),
-    who_works_description: z.string().min(2, {
+    who_works_description: z.string().min(0, {
         message: 'A descrição da seção de como funciona deve ter pelo menos 2 caracteres.',
     }),
     who_works_image: z.instanceof(File, {
@@ -127,10 +177,10 @@ const formSchema = z.object({
     who_works_details: z
         .array(
             z.object({
-                title: z.string().min(2, {
+                title: z.string().min(0, {
                     message: 'O título da seção de como funciona deve ter pelo menos 2 caracteres.',
                 }),
-                description: z.string().min(2, {
+                description: z.string().min(0, {
                     message: 'A descrição da seção de como funciona deve ter pelo menos 2 caracteres.',
                 }),
             }),
@@ -140,26 +190,26 @@ const formSchema = z.object({
         }),
 
     // Destinations
-    destinations_section_intro_highlight: z.string().min(2, {
+    destinations_section_intro_highlight: z.string().min(0, {
         message: 'O destaque da seção de destinos deve ter pelo menos 2 caracteres.',
     }),
-    destinations_title: z.string().min(2, {
+    destinations_title: z.string().min(0, {
         message: 'O título da seção de destinos deve ter pelo menos 2 caracteres.',
     }),
-    destinations_description: z.string().min(2, {
+    destinations_description: z.string().min(0, {
         message: 'A descrição da seção de destinos deve ter pelo menos 2 caracteres.',
     }),
-    destinations_button_text: z.string().min(2, {
+    destinations_button_text: z.string().min(0, {
         message: 'O texto do botão da seção de destinos deve ter pelo menos 2 caracteres.',
     }),
-    destinations_button_link: z.string().min(2, {
+    destinations_button_link: z.string().min(0, {
         message: 'O link do botão da seção de destinos deve ter pelo menos 2 caracteres.',
     }),
 
     destinations_details: z
         .array(
             z.object({
-                title: z.string().min(2, {
+                title: z.string().min(0, {
                     message: 'O título da seção de destinos deve ter pelo menos 2 caracteres.',
                 }),
                 image: z.instanceof(File, {
@@ -172,10 +222,10 @@ const formSchema = z.object({
         }),
 
     // Packages
-    packages_section_intro_highlight: z.string().min(2, {
+    packages_section_intro_highlight: z.string().min(0, {
         message: 'O destaque da seção de pacotes deve ter pelo menos 2 caracteres.',
     }),
-    packages_title: z.string().min(2, {
+    packages_title: z.string().min(0, {
         message: 'O título da seção de pacotes deve ter pelo menos 2 caracteres.',
     }),
     packages_details: z.array(
@@ -191,140 +241,206 @@ const formSchema = z.object({
     ),
 
     // Footer
-    footer_title: z.string().min(2, {
+    footer_title: z.string().min(0, {
         message: 'O título da seção de rodapé deve ter pelo menos 2 caracteres.',
     }),
-    footer_description: z.string().min(2, {
+    footer_description: z.string().min(0, {
         message: 'A descrição da seção de rodapé deve ter pelo menos 2 caracteres.',
     }),
-    footer_button_text: z.string().min(2, {
+    footer_button_text: z.string().min(0, {
         message: 'O texto do botão da seção de rodapé deve ter pelo menos 2 caracteres.',
     }),
-    footer_button_link: z.string().min(2, {
+    footer_button_link: z.string().min(0, {
         message: 'O link do botão da seção de rodapé deve ter pelo menos 2 caracteres.',
     }),
     footer_details: z.array(
         z.object({
-            title: z.string().min(2, {
+            title: z.string().min(0, {
                 message: 'O título da seção de rodapé deve ter pelo menos 2 caracteres.',
             }),
-            link: z.string().min(2, {
+            link: z.string().min(0, {
                 message: 'O link da seção de rodapé deve ter pelo menos 2 caracteres.',
             }),
         }),
     ),
-    new_package: z.object({
-        title: z.string(),
-        image: z.instanceof(File).optional(),
-        tags: z.array(z.string()),
-        service: z.string(),
-        time: z.string(),
-        price: z.number(),
-        link: z.string(),
-    }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Home() {
+    const { home } = usePage<{ home: Home }>().props;
+
+    console.log(home);
+
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            slug: '',
-            page_title: '',
-            page_description: '',
-            banner_title: '',
-            banner_description: '',
-            banner_image: undefined,
-            banner_image_button_text: '',
-            banner_image_button_link: '',
-            banner_button_text: '',
-            banner_button_link: '',
-            banner_image_title: '',
-            banner_section_details_1_title: '',
-            banner_section_details_1_description: '',
-            banner_section_details_2_title: '',
-            banner_section_details_2_description: '',
-            banner_section_details_3_title: '',
-            banner_section_details_3_description: '',
-            banner_video_title: '',
-            banner_video_image: undefined,
-            banner_video_url: '',
-            cta_text_1: '',
-            cta_text_2: '',
-            who_works_section_intro_highlight: '',
-            who_works_intro_title: '',
-            who_works_intro_description: '',
-            who_works_title: '',
-            who_works_description: '',
-            who_works_image: undefined,
-            who_works_details: [
+            slug: home.slug ?? '',
+            page_title: home.page_title ?? '',
+            page_description: home.page_description ?? '',
+            banner_title: home.banner_title ?? '',
+            banner_description: home.banner_description ?? '',
+            banner_image_button_text: home.banner_image_button_text ?? '',
+            banner_image_button_link: home.banner_image_button_link ?? '',
+            banner_button_text: home.banner_button_text ?? '',
+            banner_button_link: home.banner_button_link ?? '',
+            banner_image_title: home.banner_image_title ?? '',
+            banner_image_description: home.banner_image_description ?? '',
+            banner_section_details_1_title: home.banner_section_details_1_title ?? '',
+            banner_section_details_1_description: home.banner_section_details_1_description ?? '',
+            banner_section_details_2_title: home.banner_section_details_2_title ?? '',
+            banner_section_details_2_description: home.banner_section_details_2_description ?? '',
+            banner_section_details_3_title: home.banner_section_details_3_title ?? '',
+            banner_section_details_3_description: home.banner_section_details_3_description ?? '',
+            banner_video_title: home.banner_video_title ?? '',
+            banner_video_url: home.banner_video_url ?? '',
+            cta_text_1: home.cta_text_1 ?? '',
+            cta_text_2: home.cta_text_2 ?? '',
+            who_works_section_intro_highlight: home.who_works_section_intro_highlight ?? '',
+            who_works_intro_title: home.who_works_intro_title ?? '',
+            who_works_intro_description: home.who_works_intro_description ?? '',
+            who_works_title: home.who_works_title ?? '',
+            who_works_description: home.who_works_description ?? '',
+            who_works_details: JSON.parse(home.who_works_details as unknown as string) ?? [
                 {
                     title: '',
                     description: '',
                 },
             ],
-            destinations_section_intro_highlight: '',
-            destinations_title: '',
-            destinations_description: '',
-            destinations_button_text: '',
-            destinations_button_link: '',
-            destinations_details: [
+            destinations_section_intro_highlight: home.destinations_section_intro_highlight ?? '',
+            destinations_title: home.destinations_title ?? '',
+            destinations_description: home.destinations_description ?? '',
+            destinations_button_text: home.destinations_button_text ?? '',
+            destinations_button_link: home.destinations_button_link ?? '',
+            destinations_details: home.destinations_details ?? [
                 {
                     title: '',
-                    image: undefined,
                 },
                 {
                     title: '',
-                    image: undefined,
                 },
                 {
                     title: '',
-                    image: undefined,
                 },
                 {
                     title: '',
-                    image: undefined,
                 },
                 {
                     title: '',
-                    image: undefined,
                 },
                 {
                     title: '',
-                    image: undefined,
                 },
             ],
-            packages_section_intro_highlight: '',
-            packages_title: '',
-            packages_details: [],
-            footer_title: '',
-            footer_description: '',
-            footer_button_text: '',
-            footer_button_link: '',
-            footer_details: [],
-            new_package: {
-                title: '',
-                image: undefined,
-                tags: [],
-                service: '',
-                time: '',
-                price: 0,
-                link: '',
-            },
+            packages_section_intro_highlight: home.packages_section_intro_highlight ?? '',
+            packages_title: home.packages_title ?? '',
+            footer_title: home.footer_title ?? '',
+            footer_description: home.footer_description ?? '',
+            footer_button_text: home.footer_button_text ?? '',
+            footer_button_link: home.footer_button_link ?? '',
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-    }
+    const onSubmit: SubmitHandler<FormValues> = async (values) => {
+        try {
+            const formData = new FormData();
+
+            formData.append('_method', 'PUT');
+            formData.append('slug', values.slug ?? '');
+            formData.append('page_title', values.page_title);
+            formData.append('page_description', values.page_description);
+            formData.append('banner_title', values.banner_title);
+            formData.append('banner_description', values.banner_description);
+
+            // Handle banner image
+            if (values.banner_image && values.banner_image instanceof File) {
+                formData.append('banner_image', values.banner_image);
+            }
+
+            formData.append('banner_image_button_text', values.banner_image_button_text);
+            formData.append('banner_image_button_link', values.banner_image_button_link);
+            formData.append('banner_button_text', values.banner_button_text);
+            formData.append('banner_button_link', values.banner_button_link);
+            formData.append('banner_image_title', values.banner_image_title);
+            formData.append('banner_image_description', values.banner_image_description);
+            formData.append('banner_section_details_1_title', values.banner_section_details_1_title);
+            formData.append('banner_section_details_1_description', values.banner_section_details_1_description);
+            formData.append('banner_section_details_2_title', values.banner_section_details_2_title);
+            formData.append('banner_section_details_2_description', values.banner_section_details_2_description);
+            formData.append('banner_section_details_3_title', values.banner_section_details_3_title);
+            formData.append('banner_section_details_3_description', values.banner_section_details_3_description);
+            formData.append('banner_video_title', values.banner_video_title);
+
+            // Handle banner video image
+            if (values.banner_video_image && values.banner_video_image instanceof File) {
+                formData.append('banner_video_image', values.banner_video_image);
+            }
+
+            formData.append('banner_video_url', values.banner_video_url);
+            formData.append('cta_text_1', values.cta_text_1);
+            formData.append('cta_text_2', values.cta_text_2);
+            formData.append('who_works_section_intro_highlight', values.who_works_section_intro_highlight);
+            formData.append('who_works_intro_title', values.who_works_intro_title);
+            formData.append('who_works_intro_description', values.who_works_intro_description);
+            formData.append('who_works_title', values.who_works_title);
+            formData.append('who_works_description', values.who_works_description);
+
+            // Handle who works image
+            if (values.who_works_image && values.who_works_image instanceof File) {
+                formData.append('who_works_image', values.who_works_image);
+            }
+
+            formData.append('who_works_details', JSON.stringify(values.who_works_details));
+            formData.append('destinations_section_intro_highlight', values.destinations_section_intro_highlight);
+            formData.append('destinations_title', values.destinations_title);
+            formData.append('destinations_description', values.destinations_description);
+            formData.append('destinations_button_text', values.destinations_button_text);
+            formData.append('destinations_button_link', values.destinations_button_link);
+
+            values.destinations_details.forEach((detail, index) => {
+                formData.append(`destinations_details[${index}][title]`, detail.title ?? '');
+
+                if (detail.image instanceof File) {
+                    formData.append(`destinations_details[${index}][image]`, detail.image);
+                }
+            });
+
+            formData.append('packages_section_intro_highlight', values.packages_section_intro_highlight);
+            formData.append('packages_title', values.packages_title);
+
+            router.post(route('dashboard.pages.home.update'), formData, {
+                forceFormData: true,
+                headers: {
+                    'X-Inertia': 'true',
+                },
+                onSuccess: () => {
+                    toast.success('Página atualizada com sucesso!');
+                    form.reset();
+                },
+                onError: (errors) => {
+                    console.error('Erros de validação:', errors);
+                    toast.error('Erro ao atualizar a página.');
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            toast.error('Erro ao atualizar a página.');
+        }
+    };
 
     return (
         <AppLayout>
             <Head title="Dashboard" />
             <div className="px-6 py-6">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            onSubmit(form.getValues());
+                        }}
+                        className="space-y-8"
+                        encType="multipart/form-data"
+                    >
                         <ContentBlock
                             section_title="SEO"
                             section_description="Esta seção é responsável pela edição do SEO da página inicial, incluindo título, descrição e URL."
@@ -336,7 +452,7 @@ export default function Home() {
                                     <div className="col-span-full">
                                         <FormLabel>URL</FormLabel>
                                         <div className="focus-visible:border-ring focus-visible:ring-ring/50 mt-1 flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-visible:ring-[3px]">
-                                            <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">cage.com.br/</div>
+                                            <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">grecovistos.com.br/</div>
                                             <input
                                                 type="text"
                                                 placeholder="slug"
@@ -386,6 +502,7 @@ export default function Home() {
                         <ContentBlock
                             section_title="Banner"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção banner da página inicial, incluindo título, descrição e botões."
+                            section_image={'/dashboard/banner_img.png'}
                         >
                             <FormField
                                 control={form.control}
@@ -408,16 +525,45 @@ export default function Home() {
                                     <FormItem className="col-span-full">
                                         <FormLabel>Descrição do banner</FormLabel>
                                         <FormControl>
-                                            <Textarea
-                                                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                                                {...field}
-                                            />
+                                            <Textarea placeholder="Lorem ipsum dolor sit amet" {...field} />
                                         </FormControl>
                                         <FormDescription>Este é a descrição do banner que será exibida no navegador.</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+
+                            <div className="col-span-full flex flex-row gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="banner_button_text"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Texto do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Saiba mais" {...field} />
+                                            </FormControl>
+                                            <FormDescription>Este é a descrição do banner que será exibida no navegador.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="banner_button_link"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Link do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="https://exemplo.com" {...field} />
+                                            </FormControl>
+                                            <FormDescription>Este é a descrição do banner que será exibida no navegador.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                             <FormField
                                 control={form.control}
                                 name="banner_image"
@@ -427,7 +573,7 @@ export default function Home() {
                                         <FormControl>
                                             <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files?.[0])} />
                                         </FormControl>
-                                        <FormDescription>Esta é a imagem do banner que será exibida no navegador.</FormDescription>
+                                        <FormDescription>Esta é a imagem do vídeo do banner.</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -460,6 +606,39 @@ export default function Home() {
                                     </FormItem>
                                 )}
                             />
+
+                            <div className="col-span-full flex flex-row gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="banner_image_button_text"
+                                    render={({ field }) => (
+                                        <FormItem className="col-span-full w-full">
+                                            <FormLabel>Texto do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Tirar meu visto agora!" {...field} />
+                                            </FormControl>
+                                            <FormDescription>Este é o texto do botão em cima da imagem do banner.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="banner_image_button_link"
+                                    render={({ field }) => (
+                                        <FormItem className="col-span-full w-full">
+                                            <FormLabel>Link do botão</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Tirar meu visto agora!" {...field} />
+                                            </FormControl>
+                                            <FormDescription>Este é o link do botão em cima da imagem do banner.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
                             <div className="col-span-full grid grid-cols-1 gap-4 md:grid-cols-3">
                                 <div className="flex flex-col gap-6">
                                     <FormField
@@ -595,6 +774,7 @@ export default function Home() {
                         <ContentBlock
                             section_title="CTA"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção CTA da página inicial, incluindo título, descrição e botões."
+                            section_image={'/dashboard/cta.png'}
                         >
                             <FormField
                                 control={form.control}
@@ -631,6 +811,7 @@ export default function Home() {
                         <ContentBlock
                             section_title="Como Funciona"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção Como Funciona da página inicial, incluindo título, descrição e detalhes."
+                            section_image={'/dashboard/whoWorks.png'}
                         >
                             <FormField
                                 control={form.control}
@@ -690,7 +871,7 @@ export default function Home() {
                                     </Button>
                                 </div>
 
-                                {form.watch('who_works_details')?.map((_, index) => (
+                                {(form.watch('who_works_details') || [])?.map((_, index) => (
                                     <div key={index} className="mb-6 rounded-lg border p-4">
                                         <div className="mb-4 flex items-center justify-between">
                                             <h4 className="font-medium">Detalhe {index + 1}</h4>
@@ -763,6 +944,7 @@ export default function Home() {
                         <ContentBlock
                             section_title="Destinos"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção Destinos da página inicial, incluindo título, descrição e detalhes."
+                            section_image={'/dashboard/destinations.png'}
                         >
                             <FormField
                                 control={form.control}
@@ -838,7 +1020,7 @@ export default function Home() {
                                             <FormLabel>Detalhes dos destinos</FormLabel>
                                             <FormControl>
                                                 <div className="grid grid-cols-1 space-y-2 gap-x-2 md:grid-cols-3">
-                                                    {field.value.map((_, index) => (
+                                                    {field.value.map((_: { title: string; image: File }, index: number) => (
                                                         <div key={index} className="grid gap-4 rounded-lg border p-4">
                                                             <FormField
                                                                 control={form.control}
@@ -886,6 +1068,7 @@ export default function Home() {
                         <ContentBlock
                             section_title="Pacotes"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção Pacotes da página inicial, incluindo título, descrição e detalhes."
+                            section_image={'/dashboard/packages.png'}
                         >
                             <FormField
                                 control={form.control}
@@ -894,9 +1077,8 @@ export default function Home() {
                                     <FormItem className="col-span-full">
                                         <FormLabel>Destaque da seção</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Lorem ipsum dolor sit amet" {...field} />
+                                            <Input placeholder="Destaque da seção" {...field} />
                                         </FormControl>
-                                        <FormDescription>Este é o destaque da seção de pacotes.</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -906,241 +1088,9 @@ export default function Home() {
                                 name="packages_title"
                                 render={({ field }) => (
                                     <FormItem className="col-span-full">
-                                        <FormLabel>Título da seção</FormLabel>
+                                        <FormLabel>Título</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Lorem ipsum dolor sit amet" {...field} />
-                                        </FormControl>
-                                        <FormDescription>Este é o título da seção de pacotes.</FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="packages_details"
-                                render={({ field }) => (
-                                    <FormItem className="col-span-full">
-                                        {/* Removido o botão "Adicionar detalhe" para evitar confusão */}
-                                        <div className="mb-4 flex items-center justify-between">
-                                            <h3 className="text-lg font-medium">Detalhes dos pacotes</h3>
-                                        </div>
-                                        <FormControl>
-                                            <div>
-                                                <div className="space-y-4 w-full">
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.title"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Título do pacote</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input placeholder="Título do pacote" {...field} />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.image"
-                                                            render={({ field: { onChange, ...field } }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Imagem</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input
-                                                                            type="file"
-                                                                            accept="image/*"
-                                                                            onChange={(e) => onChange(e.target.files?.[0])}
-                                                                            onBlur={field.onBlur}
-                                                                            name={field.name}
-                                                                            ref={field.ref}
-                                                                            disabled={field.disabled}
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.tags"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Tags</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input
-                                                                            placeholder="Tags separadas por vírgula"
-                                                                            onChange={(e) =>
-                                                                                field.onChange(e.target.value.split(',').map((tag) => tag.trim()))
-                                                                            }
-                                                                            value={Array.isArray(field.value) ? field.value.join(', ') : ''} // Garante que field.value é um array
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.service"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Atendimento</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input placeholder="Tipo de atendimento" {...field} />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.time"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Duração</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input placeholder="Duração do pacote" {...field} />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.price"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Preço</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input
-                                                                            type="number"
-                                                                            placeholder="Preço do pacote"
-                                                                            onChange={(e) => field.onChange(Number(e.target.value))}
-                                                                            value={field.value}
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="new_package.link"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Link</FormLabel>
-                                                                    <FormControl>
-                                                                        <Input placeholder="Link do pacote" {...field} />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                    <Button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            const newPackage = form.getValues('new_package');
-                                                            const currentDetails = form.getValues('packages_details') || [];
-
-                                                            // Validação com Zod
-                                                            const packageSchema = z.object({
-                                                                title: z.string().min(2, 'O título deve ter pelo menos 2 caracteres'),
-                                                                image: z.instanceof(File, { message: 'A imagem é obrigatória' }),
-                                                                service: z.string().min(2, 'O serviço deve ter pelo menos 2 caracteres'),
-                                                                time: z.string().min(2, 'A duração é obrigatória'),
-                                                                price: z.number().min(0, 'O preço deve ser maior que 0'),
-                                                                link: z.string().url('O link deve ser uma URL válida'),
-                                                                tags: z.array(z.string()).optional(),
-                                                            });
-
-                                                            const result = packageSchema.safeParse(newPackage);
-
-                                                            if (result.success) {
-                                                                // Adiciona o novo pacote à lista com tags garantidas
-                                                                form.setValue('packages_details', [
-                                                                    ...currentDetails,
-                                                                    {
-                                                                        ...result.data,
-                                                                        tags: result.data.tags || [],
-                                                                    },
-                                                                ]);
-
-                                                                // Limpa os campos do novo pacote para o próximo item
-                                                                form.setValue('new_package', {
-                                                                    title: '',
-                                                                    image: undefined,
-                                                                    tags: [],
-                                                                    service: '',
-                                                                    time: '',
-                                                                    price: 0,
-                                                                    link: '',
-                                                                });
-                                                            } else {
-                                                                // Atualiza os erros do formulário com os erros do Zod
-                                                                result.error.errors.forEach((error) => {
-                                                                    const fieldName = `new_package.${error.path[0]}` as keyof typeof form.getValues;
-                                                                    form.setError(fieldName, {
-                                                                        type: 'manual',
-                                                                        message: error.message,
-                                                                    });
-                                                                });
-                                                            }
-                                                        }}
-                                                    >
-                                                        Adicionar à tabela
-                                                    </Button>
-                                                </div>
-
-                                                <div className="mt-4 max-w-full overflow-x-auto">
-                                                    <Table>
-                                                        <TableHeader>
-                                                            <TableRow>
-                                                                <TableHead>Título</TableHead>
-                                                                <TableHead>Imagem</TableHead>
-                                                                <TableHead>Tags</TableHead>
-                                                                <TableHead>Atendimento</TableHead>
-                                                                <TableHead>Duração</TableHead>
-                                                                <TableHead>Preço</TableHead>
-                                                                <TableHead>Link</TableHead>
-                                                                <TableHead className="w-[100px]">Ações</TableHead>
-                                                            </TableRow>
-                                                        </TableHeader>
-                                                        <TableBody>
-                                                            {field.value.map((item, index) => (
-                                                                <TableRow key={index}>
-                                                                    <TableCell className="line-clamp-1 max-w-[200px]">{item.title}</TableCell>
-                                                                    <TableCell>{item.image?.name}</TableCell>
-                                                                    <TableCell>{item.tags?.join(', ')}</TableCell>{' '}
-                                                                    {/* Usa optional chaining para tags */}
-                                                                    <TableCell>{item.service}</TableCell>
-                                                                    <TableCell>{item.time}</TableCell>
-                                                                    <TableCell>{item.price}</TableCell>
-                                                                    <TableCell>{item.link}</TableCell>
-                                                                    <TableCell>
-                                                                        <Button
-                                                                            type="button"
-                                                                            variant="ghost"
-                                                                            size="icon"
-                                                                            onClick={() => {
-                                                                                const currentDetails = form.getValues('packages_details');
-                                                                                form.setValue(
-                                                                                    'packages_details',
-                                                                                    currentDetails.filter((_, i) => i !== index),
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            <Trash2Icon className="h-4 w-4" />
-                                                                        </Button>
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            ))}
-                                                        </TableBody>
-                                                    </Table>
-                                                </div>
-                                            </div>
+                                            <Input placeholder="Título da seção" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

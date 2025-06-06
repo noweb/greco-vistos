@@ -1,13 +1,22 @@
+import { Home } from '@/pages/home';
 import { Slide, Zoom } from 'react-awesome-reveal';
 
-export default function CTA() {
+type CTAProps = {
+    home: Pick<
+        Home,
+        | 'cta_text_1'
+        | 'cta_text_2'
+    >;
+};
+
+export default function CTA({ home }: CTAProps) {
     return (
         <div className="bg-app-tertiary py-14">
             <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 2xl:px-0">
                 <div className="grid grid-cols-8">
                     <h2 className="col-span-8 text-[54px] leading-[60px] md:col-span-6">
                         <Slide direction="left" triggerOnce duration={1500}>
-                            <span className="text-typography-primary uppercase">Consultoria completa para tirar seu visto</span>
+                            <span className="text-typography-primary uppercase">{home.cta_text_1 ?? ''}</span>
                         </Slide>
                     </h2>
                     <span className="col-span-8 flex items-start justify-end pr-16 md:col-span-2">
@@ -24,7 +33,7 @@ export default function CTA() {
                     </span>
                     <h2 className="col-span-8 text-right text-[54px] leading-[60px] md:col-span-6">
                         <Slide direction="right" triggerOnce>
-                            <span className="text-typography-primary text-right uppercase italic">você esta em boas mãos!</span>
+                            <span className="text-typography-primary text-right uppercase italic">{home.cta_text_2 ?? ''}</span>
                         </Slide>
                     </h2>
                 </div>

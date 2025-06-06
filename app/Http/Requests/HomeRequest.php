@@ -71,18 +71,6 @@ class HomeRequest extends FormRequest
             'destinations_details.*.title' => ['required', 'string', 'min:2'],
             'destinations_details.*.image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
 
-            // Packages
-            'packages_section_intro_highlight' => ['required', 'string', 'min:2'],
-            'packages_title' => ['required', 'string', 'min:2'],
-            'packages_details' => ['required', 'array'],
-            'packages_details.*.title' => ['required', 'string'],
-            'packages_details.*.image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'packages_details.*.tags' => ['required', 'array'],
-            'packages_details.*.service' => ['required', 'string'],
-            'packages_details.*.time' => ['required', 'string'],
-            'packages_details.*.price' => ['required', 'numeric'],
-            'packages_details.*.link' => ['required', 'string'],
-
             // Footer
             'footer_title' => ['required', 'string', 'min:2'],
             'footer_description' => ['required', 'string', 'min:2'],

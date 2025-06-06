@@ -48,7 +48,6 @@ class Home extends Model
         'destinations_details',
         'packages_section_intro_highlight',
         'packages_title',
-        'packages_details',
         'footer_title',
         'footer_description',
         'footer_button_text',
@@ -59,10 +58,6 @@ class Home extends Model
     protected $casts = [
         'who_works_details' => 'array',
         'destinations_details' => 'array',
-        'packages_details' => 'array',
         'footer_details' => 'array',
-        'banner_section_details_1_title' => 'integer',
-        'banner_section_details_2_title' => 'integer',
-        'banner_section_details_3_title' => 'integer',
     ];
 }

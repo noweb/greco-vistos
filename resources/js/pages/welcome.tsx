@@ -4,16 +4,26 @@ import Destinations from '@/components/pages/Destinations';
 import Footer from '@/components/pages/Footer';
 import Packages from '@/components/pages/Packages';
 import WhoWorks from '@/components/pages/WhoWorks';
+import { usePage } from '@inertiajs/react';
+import { Toaster } from 'react-hot-toast';
+import { Home } from './home';
 
 export default function Welcome() {
+    const { home } = usePage<{ home: Home }>().props;
+
+    console.log(home);
+
     return (
         <>
-            <Banner />
-            <CTA />
-            <WhoWorks />
-            <Destinations />
-            <Packages />
-            <Footer />
+            <Toaster />
+            <Banner home={home} />
+            <CTA home={home} />
+            <WhoWorks home={home} />
+            <Destinations home={home} />
+            <Packages home={home} />
+            <Footer
+            //  home={home}
+            />
         </>
     );
 }
