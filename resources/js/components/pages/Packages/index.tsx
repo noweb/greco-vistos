@@ -12,12 +12,14 @@ function Card({
     atendimento,
     tempo,
     preco,
+    link,
 }: {
     imageUrl: string;
     title: string;
     atendimento: string;
     tempo: string;
     preco: string;
+    link: string;
 }) {
     return (
         <div className="embla__slide flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -57,9 +59,14 @@ function Card({
                         <p>A partir de</p>
                         <p className="text-xl font-semibold text-gray-900">{preco}</p>
                     </div>
-                    <button className="cursor-pointer rounded-full bg-gray-900 px-5 py-2 text-sm text-white transition hover:bg-gray-700">
+                    <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cursor-pointer rounded-full bg-gray-900 px-5 py-2 text-sm text-white transition hover:bg-gray-700"
+                    >
                         Contratar
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -158,6 +165,7 @@ export default function Packages({ home }: PackagesProps) {
                                     atendimento={detail.service}
                                     tempo={detail.time}
                                     preco={detail.price}
+                                    link={detail.link}
                                 />
                             ))}
                         </div>

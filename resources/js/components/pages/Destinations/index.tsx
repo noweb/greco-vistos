@@ -4,7 +4,6 @@ import { Element } from 'react-scroll';
 
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Home } from '@/pages/home';
-import { router } from '@inertiajs/react';
 
 function DestinationsGrid({ destinations }: { destinations: { title: string; image: File | string; description?: string }[] }) {
     return (
@@ -29,13 +28,17 @@ function DestinationsGrid({ destinations }: { destinations: { title: string; ima
                                         <img
                                             src={`/storage/${destino.image as unknown as string}`}
                                             alt={destino.title}
-                                            className="aspect-square w-full rounded-lg object-cover col-span-3 bg-gray-200"
+                                            className="col-span-3 aspect-square w-full rounded-lg bg-gray-200 object-cover"
                                         />
-                                        <div className="col-span-3 py-5 px-3 h-[500px] overflow-y-auto">
-                                          <div className="flex flex-col gap-4">
-                                            <DialogTitle className="text-[24px] font-semibold text-typography-primary">{destino.title}</DialogTitle>
-                                            <DialogDescription className="text-[16px] text-typography-secondary leading-relaxed">{destino.description ?? ''}</DialogDescription>
-                                          </div>
+                                        <div className="col-span-3 h-[500px] overflow-y-auto px-3 py-5">
+                                            <div className="flex flex-col gap-4">
+                                                <DialogTitle className="text-typography-primary text-[24px] font-semibold">
+                                                    {destino.title}
+                                                </DialogTitle>
+                                                <DialogDescription className="text-typography-secondary text-[16px] leading-relaxed">
+                                                    {destino.description ?? ''}
+                                                </DialogDescription>
+                                            </div>
                                         </div>
                                     </div>
                                 </DialogContent>
@@ -94,12 +97,13 @@ export default function Destinations({ home }: DestinationsProps) {
                     </Fade>
 
                     <Zoom triggerOnce duration={1000} delay={600}>
-                        <Button
+                        <a
+                            href={home.destinations_button_link ?? ''}
+                            target="_blank"
                             className="bg-app-secondary hover:bg-app-secondary/80 mt-10 flex cursor-pointer gap-3 rounded-full px-6 py-2 transition-all duration-300"
-                            onClick={() => router.visit(home.destinations_button_link ?? '')}
                         >
                             <span className="text-[16px] font-semibold text-white">{home.destinations_button_text ?? ''}</span>
-                        </Button>
+                        </a>
                     </Zoom>
                 </div>
 

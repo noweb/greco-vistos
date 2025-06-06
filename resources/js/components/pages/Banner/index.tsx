@@ -1,5 +1,4 @@
 import { CountUp } from '@/components/count-up';
-import { Button } from '@headlessui/react';
 import { ArrowRightIcon, PlayIcon } from 'lucide-react';
 import { Fade, JackInTheBox, Slide } from 'react-awesome-reveal';
 import { Element } from 'react-scroll';
@@ -168,12 +167,14 @@ export default function Banner({ home }: BannerProps) {
                             </div>
                             <div className="absolute top-0 right-0 p-5">
                                 <JackInTheBox triggerOnce duration={1000} delay={400}>
-                                    <Button
+                                    <a
+                                        href={home.banner_image_button_link ?? ''}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="bg-app-primary flex cursor-pointer gap-3 rounded-full px-6 py-2 text-white transition-all duration-300 hover:bg-white"
-                                        onClick={() => router.visit(home.banner_image_button_link ?? '')}
                                     >
                                         <span className="text-app-secondary text-[16px] font-semibold">{home.banner_image_button_text ?? ''}</span>
-                                    </Button>
+                                    </a>
                                 </JackInTheBox>
                             </div>
                         </div>
