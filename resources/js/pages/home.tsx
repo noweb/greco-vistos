@@ -415,7 +415,7 @@ export default function Home() {
                 },
                 onSuccess: () => {
                     toast.success('Página atualizada com sucesso!');
-                    form.reset();
+                    // form.reset();
                 },
                 onError: (errors) => {
                     console.error('Erros de validação:', errors);
