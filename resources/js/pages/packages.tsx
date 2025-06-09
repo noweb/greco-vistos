@@ -12,21 +12,24 @@ import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { LinkIcon, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
-    title: z.string().min(2, 'O título deve ter pelo menos 2 caracteres'),
+    title: z.string().min(2, 'O título deve ter pelo menos 2 caracteres').max(255, 'O título deve ter no máximo 255 caracteres'),
     image: z
         .instanceof(File, {
             message: 'A imagem é obrigatória',
         })
-        .refine((file) => file.size <= 4095 * 1024, {
-            message: 'A imagem deve ter no máximo 4MB',
+        .refine((file) => file.size <= 8192 * 1024, {
+            message: 'A imagem deve ter no máximo 8MB',
         }),
     service: z.string().min(2, 'O serviço deve ter pelo menos 2 caracteres'),
     time: z.string().min(2, 'A duração é obrigatória'),
-    price: z.string().min(1, 'O preço é obrigatório'),
+    price: z
+        .string()
+        .min(1, 'O preço é obrigatório')
+        .regex(/^\d{1,3}(\.\d{3})*,\d{2}$/, 'O preço deve estar no formato: 200,00 ou 2.000,00'),
     link: z.string().url('O link deve ser uma URL válida'),
     tags: z.string().min(1, 'Pelo menos uma tag é obrigatória'),
     is_active: z.boolean(),
@@ -64,7 +67,7 @@ export default function Products() {
 
     function handleDelete(id: number) {
         if (!confirm('Tem certeza que deseja excluir este pacote?')) return;
-        console.log('delete');
+
         router.delete(route('dashboard.pages.packages.destroy', { id }), {
             preserveScroll: true,
             onSuccess: () => {
@@ -107,19 +110,13 @@ export default function Products() {
                 onSuccess: () => {
                     toast.success('Pacote criado com sucesso');
                     form.reset();
+                    getProducts();
                 },
                 onError: (errors) => {
                     console.error('Erros de validação:', errors);
                     toast.error('Erro ao criar pacote');
                 },
             });
-
-            toast.success('Pacote criado com sucesso');
-            form.reset();
-
-            setTimeout(() => {
-                getProducts();
-            }, 1000);
         } catch (error) {
             console.error(error);
             toast.error('Erro ao criar pacote');
@@ -148,11 +145,7 @@ export default function Products() {
             <Head title="Dashboard" />
             <div className="px-6 py-6">
                 <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-8"
-                        encType="multipart/form-data"
-                    >
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" encType="multipart/form-data">
                         <ContentBlock
                             section_title="Pacotes"
                             section_description="Esta seção é responsável pela edição do conteúdo da seção Pacotes da página inicial, incluindo título, descrição e detalhes."
@@ -321,7 +314,7 @@ export default function Products() {
                                                 />
                                             </Avatar>
                                         </TableCell>
-                                        <TableCell>{p.title}</TableCell>
+                                        <TableCell>{p.title.length > 30 ? `${p.title.substring(0, 30)}...` : p.title}</TableCell>
                                         <TableCell>{p.service}</TableCell>
                                         <TableCell>R$ {p.price}</TableCell>
                                         <TableCell>

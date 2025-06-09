@@ -5,7 +5,7 @@ import Footer from '@/components/pages/Footer';
 import Packages from '@/components/pages/Packages';
 import WhoWorks from '@/components/pages/WhoWorks';
 import { Head, usePage } from '@inertiajs/react';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from 'sonner';
 import { Home } from './home';
 
 export default function Welcome() {

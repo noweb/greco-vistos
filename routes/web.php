@@ -20,7 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard/packages', [ProductController::class, 'index'])->name('dashboard.pages.packages.index');
     Route::post('dashboard/packages', [ProductController::class, 'store'])->name('dashboard.pages.packages.store');
     Route::put('dashboard/packages', [ProductController::class, 'update'])->name('dashboard.pages.packages.update');
-    Route::delete('dashboard/packages/{id}', [ProductController::class, 'destroy'])->name('dashboard.pages.packages.destroy');
+    Route::delete('dashboard/packages/{product}', [ProductController::class, 'destroy'])->name('dashboard.pages.packages.destroy');
 
     Route::get('dashboard/settings', function () {
         return Inertia::render('settings');

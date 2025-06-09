@@ -6,8 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export interface Home {
@@ -301,6 +302,14 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function Home() {
     const { home } = usePage<{ home: Home }>().props;
+    const [error, setError] = useState<{
+        banner_video_url: {
+            type: string;
+            message: string;
+        };
+    }>({
+        banner_video_url: { type: '', message: '' },
+    });
 
     console.log(home);
 
@@ -385,6 +394,50 @@ export default function Home() {
         },
     });
 
+    function getYoutubeEmbedUrl(url: string): string | null {
+        try {
+            if (!url) {
+                setError({
+                    banner_video_url: {
+                        type: 'manual',
+                        message: 'URL do vídeo é obrigatória',
+                    },
+                });
+                new Error('URL do vídeo é obrigatória');
+                return null;
+            }
+
+            const patterns: RegExp[] = [/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/];
+
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    const videoId: string = match[1];
+                    return `https://www.youtube.com/embed/${videoId}`;
+                }
+            }
+
+            setError({
+                banner_video_url: {
+                    type: 'manual',
+                    message: 'URL do YouTube inválida',
+                },
+            });
+            new Error('URL do YouTube inválida');
+            return null;
+        } catch (error: unknown) {
+            console.error('Erro ao processar URL do vídeo:', error);
+            setError({
+                banner_video_url: {
+                    type: 'manual',
+                    message: 'Erro ao processar URL do vídeo',
+                },
+            });
+            new Error('Erro ao processar URL do vídeo');
+            return null;
+        }
+    }
+
     const onSubmit: SubmitHandler<FormValues> = async (values) => {
         try {
             const formData = new FormData();
@@ -420,7 +473,9 @@ export default function Home() {
                 formData.append('banner_video_image', values.banner_video_image);
             }
 
-            formData.append('banner_video_url', values.banner_video_url);
+            const youtubeEmbedUrl = getYoutubeEmbedUrl(values.banner_video_url ?? '');
+
+            formData.append('banner_video_url', youtubeEmbedUrl ?? '');
             formData.append('cta_text_1', values.cta_text_1);
             formData.append('cta_text_2', values.cta_text_2);
             formData.append('who_works_section_intro_highlight', values.who_works_section_intro_highlight);
@@ -819,10 +874,11 @@ export default function Home() {
                                     <FormItem className="col-span-full">
                                         <FormLabel>URL do vídeo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://exemplo.com/video" {...field} />
+                                            <Input placeholder="https://www.youtube.com/watch?v=..." {...field} />
                                         </FormControl>
                                         <FormDescription>Esta é a URL do vídeo do banner.</FormDescription>
                                         <FormMessage />
+                                        {error.banner_video_url.type === 'manual' && <p className="text-red-500">{error.banner_video_url.message}</p>}
                                     </FormItem>
                                 )}
                             />

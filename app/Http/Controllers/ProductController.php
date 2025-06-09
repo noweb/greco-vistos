@@ -35,11 +35,11 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => ['required', 'string', 'max:255'],
-            'image' => ['required', 'image', 'max:4096'],
+            'image' => ['required', 'image', 'max:8192'],
             'tags' => ['required', 'string', 'max:255'],
             'service' => ['required', 'string', 'max:255'],
             'time' => ['required', 'string', 'max:255'],
-            'price' => ['required', 'string', 'regex:/^\d+([,.]\d{1,2})?$/'],
+            'price' => ['required', 'string', 'regex:/^\d{1,3}(\.\d{3})*,\d{2}$/'],
             'link' => ['required', 'url', 'max:255'],
             'is_active' => ['required', 'in:0,1'],
         ]);
