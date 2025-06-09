@@ -311,8 +311,6 @@ export default function Home() {
         banner_video_url: { type: '', message: '' },
     });
 
-    console.log(home);
-
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
