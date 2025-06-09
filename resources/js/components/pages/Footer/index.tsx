@@ -85,14 +85,18 @@ export default function Footer({ home }: FooterProps) {
 
                         <div className="flex flex-wrap gap-3 sm:gap-5">
                             {socialLinks.map((link, index) => (
-                                <a
-                                    key={index}
-                                    href={link.href}
-                                    target="_blank"
-                                    className="hover:text-app-primary hover:!border-app-primary flex h-10 items-center justify-center rounded-full border !border-white px-5 py-2.5 text-white transition-all duration-300"
-                                >
-                                    {link.label}
-                                </a>
+                                <>
+                                    {link.href && (
+                                        <a
+                                            key={index}
+                                            href={link.href}
+                                            target="_blank"
+                                            className="hover:text-app-primary hover:!border-app-primary flex h-10 items-center justify-center rounded-full border !border-white px-5 py-2.5 text-white transition-all duration-300"
+                                        >
+                                            {link.label}
+                                        </a>
+                                    )}
+                                </>
                             ))}
                         </div>
                     </div>
