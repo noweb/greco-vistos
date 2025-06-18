@@ -24,13 +24,13 @@ function DestinationsGrid({ destinations }: { destinations: { title: string; ima
                                     />
                                 </DialogTrigger>
                                 <DialogContent className="!max-w-5xl overflow-hidden p-0 [&>button]:hidden">
-                                    <div className="grid grid-cols-6 gap-4">
+                                    <div className="grid grid-cols-6 gap-4 bg-white">
                                         <img
                                             src={`/storage/${destino.image as unknown as string}`}
                                             alt={destino.title}
                                             className="col-span-3 aspect-square w-full rounded-lg bg-gray-200 object-cover"
                                         />
-                                        <div className="col-span-3 h-[500px] overflow-y-auto px-3 py-5">
+                                        <div className="col-span-3 h-[500px] overflow-y-auto px-3 py-5 bg-white">
                                             <div className="flex flex-col gap-4">
                                                 <DialogTitle className="text-typography-primary text-[24px] font-semibold">
                                                     {destino.title}
