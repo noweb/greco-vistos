@@ -22,7 +22,7 @@ function Card({
     link: string;
 }) {
     return (
-        <div className="embla__slide flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="embla__slide flex w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm select-none">
             <div className="p-3">
                 <img
                     src={imageUrl}
@@ -43,7 +43,7 @@ function Card({
             <div className="flex flex-grow flex-col gap-3 p-4">
                 <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
 
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-sm text-gray-500 gap-x-2">
                     <div>
                         <p className="font-medium text-gray-900">Atendimento</p>
                         <p className="mt-2">{atendimento}</p>
@@ -130,13 +130,13 @@ export default function Packages({ home }: PackagesProps) {
             <div className="mb-8 flex flex-row items-end justify-between">
                 <div className="flex flex-1 flex-col">
                     <Fade triggerOnce duration={1500} delay={300}>
-                        <h2 className="mt-2 text-[40px] leading-[60px] font-semibold">{home.packages_title ?? ''}</h2>
+                        <h2 className="mt-2 text-[40px] leading-[60px] font-semibold text-typography-primary">{home.packages_title ?? ''}</h2>
                     </Fade>
                 </div>
                 <div className="flex flex-row gap-4">
                     <Button
                         onClick={scrollPrev}
-                        className="embla__prev border-app-secondary group hover:border-app-primary flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white p-2 transition-all duration-300"
+                        className="embla__prev border-app-secondary group hover:border-app-primary text-typography-primary flex aspect-square h-10 w-10 cursor-pointer items-center justify-center rounded-full border bg-white p-2 transition-all duration-300"
                     >
                         <ArrowLeftIcon className="group-hover:text-app-primary h-8 w-8 transition-all duration-300 group-hover:-translate-x-0.5" />
                     </Button>
