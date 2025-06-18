@@ -12,7 +12,7 @@ export default function Welcome() {
     const { home } = usePage<{ home: Home }>().props;
 
     return (
-        <>
+        <div className='bg-white'>
             <Head title={home.page_title ?? 'Tirar Visto'} />
             <Toaster />
             <Banner home={home} />
@@ -21,6 +21,6 @@ export default function Welcome() {
             <Destinations home={home} />
             <Packages home={home} />
             <Footer home={home} />
-        </>
+        </div>
     );
 }
