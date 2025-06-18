@@ -83,7 +83,7 @@ export default function WhoWorks({ home }: WhoWorksProps) {
                                 <img
                                     src={`/storage/${home.who_works_image as unknown as string}`}
                                     alt="who works"
-                                    className="h-full w-full object-cover"
+                                    className="h-full min-h-[750px] w-full object-cover"
                                 />
                             </div>
                         </Slide>
